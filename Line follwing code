@@ -1,0 +1,101 @@
+/* name : abu Sayem  */
+
+
+
+// Define sensor pins
+const int leftSensorPin = A0;  // Analog pin for left sensor
+const int rightSensorPin = A1; // Analog pin for right sensor
+
+// Define motor control pins
+const int motor1Pin1 = 11; // Motor B
+const int motor1Pin2 = 10; // Motor B changed pins here earlier motor a was motor b
+const int motor2Pin1 = 13; // Motor A
+const int motor2Pin2 = 12; // Motor A
+
+
+// Define motor enable pins
+const int ENA = 5; // Enable for Motor A
+const int ENB = 6; // Enable for Motor Ba
+
+// Define motor speed variables
+int motorSpeedA = 200; // Speed for Motor A (0-255)
+int motorSpeedB = 200; // Speed for Motor B (0-255)
+
+// Define threshold values for IR sensors
+const int threshold = 200; // Adjust this value based on your calibration
+
+void setup() {
+  // Initialize the sensor pins as inputs
+  pinMode(leftSensorPin, INPUT);
+  pinMode(rightSensorPin, INPUT);
+
+  // Initialize the motor control pins as outputs
+  pinMode(motor1Pin1, OUTPUT);
+  pinMode(motor1Pin2, OUTPUT);
+  pinMode(motor2Pin1, OUTPUT);
+  pinMode(motor2Pin2, OUTPUT);
+
+  // Initialize the motor enable pins as outputs
+  pinMode(ENA, OUTPUT);
+  pinMode(ENB, OUTPUT);
+
+  // Set the initial motor speed
+  analogWrite(ENA, motorSpeedA);
+  analogWrite(ENB, motorSpeedB);
+}
+
+void loop() {
+  // Read the sensor values
+  int leftSensorValue = analogRead(leftSensorPin);
+  int rightSensorValue = analogRead(rightSensorPin);
+
+  if (leftSensorValue >= threshold && rightSensorValue >= threshold) {
+    // Both sensors detect an object, stop
+    stopMoving();
+  } else if (leftSensorValue < threshold && rightSensorValue < threshold) {
+    // Both sensors do not detect an object, move forward
+    moveForward();
+  } else if (leftSensorValue >= threshold && rightSensorValue < threshold) {
+    // Left sensor detects an object, turn right
+    turnRight();
+  } else if (leftSensorValue < threshold && rightSensorValue >= threshold) {
+    // Right sensor detects an object, turn left
+    turnLeft();
+  }
+}
+
+void moveForward() {
+  analogWrite(ENA, motorSpeedA);
+  analogWrite(ENB, motorSpeedB);
+  digitalWrite(motor1Pin1, LOW);
+  digitalWrite(motor1Pin2, HIGH);
+  digitalWrite(motor2Pin1, LOW);
+  digitalWrite(motor2Pin2, HIGH);
+}
+
+void turnRight() {
+  analogWrite(ENA, motorSpeedA);
+  analogWrite(ENB, motorSpeedB);
+  digitalWrite(motor1Pin1, HIGH);
+  digitalWrite(motor1Pin2, LOW);
+  digitalWrite(motor2Pin1, LOW);
+  digitalWrite(motor2Pin2, HIGH);
+}
+
+void turnLeft() {
+  analogWrite(ENA, motorSpeedA);
+  analogWrite(ENB, motorSpeedB);
+  digitalWrite(motor1Pin1, LOW);
+  digitalWrite(motor1Pin2, HIGH);
+  digitalWrite(motor2Pin1, HIGH);
+  digitalWrite(motor2Pin2, LOW);
+}
+
+void stopMoving() {
+  analogWrite(ENA, 0);
+  analogWrite(ENB, 0);
+  digitalWrite(motor1Pin1, LOW);
+  digitalWrite(motor1Pin2, LOW);
+  digitalWrite(motor2Pin1, LOW);
+  digitalWrite(motor2Pin2, LOW);
+}
