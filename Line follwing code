@@ -3,8 +3,8 @@
 
 
 // Define sensor pins
-const int leftSensorPin = A0;  // Analog pin for left sensor
-const int rightSensorPin = A1; // Analog pin for right sensor
+const int leftSensorPin = A1;  // Analog pin for left sensor
+const int rightSensorPin = A0; // Analog pin for right sensor
 
 // Define motor control pins
 const int motor1Pin1 = 11; // Motor B
