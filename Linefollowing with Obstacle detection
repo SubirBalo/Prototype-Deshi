@@ -9,17 +9,14 @@ const int enB = 6;
 const int trigPin = 2;
 const int echoPin = 3;
 // Define pins for IR sensor
-const int leftSensorPin = A0;
-const int rightSensorPin = A1;
+const int leftsensorPin = 8;
+const int rightsensorPin = 7;
 // Define variables for ultrasonic sensor
 long duration;
 int distance;
-
 int motorSpeed =100;
 
 void forward() {
- analogWrite(enA,motorSpeed);
- analogWrite(enB,motorSpeed);
  digitalWrite(in1Pin, LOW);
  digitalWrite(in2Pin, HIGH);
  digitalWrite(in3Pin, LOW);
@@ -75,23 +72,23 @@ void setup() {
  pinMode(trigPin, OUTPUT);
  pinMode(echoPin, INPUT);
  // Initialize IR sensor pin
- pinMode(leftSensorPin, INPUT);
- pinMode(rightSensorPin , INPUT);
+ pinMode(leftsensorPin, INPUT);
+ pinMode(rightsensorPin, INPUT);
  // Set initial speed for both motors
  analogWrite(enA, motorSpeed);
  analogWrite(enB,motorSpeed );
 }
 void loop() {
  // Read IR sensor input
- int leftSensorPin  = digitalRead(leftSensorPin);
- int rightSensorPin  = digitalRead(rightSensorPin);
+ int leftsensorValue = digitalRead(leftsensorPin);
+ int rightsensorValue = digitalRead(rightsensorPin);
 analogWrite(enA, motorSpeed);
  analogWrite(enB,motorSpeed );
- if (leftSensorPin  == 0 && rightSensorPin  == 0) {
+ if (leftsensorValue == 0 && rightsensorValue == 0) {
  forward();
- } else if (leftSensorPin  == 1 && rightSensorPin  == 0) {
+ } else if (leftsensorValue == 1 && rightsensorValue == 0) {
  left();
- } else if (leftSensorPin  == 0 && rightSensorPin  == 1) {
+ } else if (leftsensorValue == 0 && rightsensorValue == 1) {
  right();
 
  }
@@ -115,21 +112,21 @@ analogWrite(enA, motorSpeed);
  right();
  delay(1200);
  forwardU();
- leftSensorPin  = digitalRead(leftSensorPin);
- rightSensorPin  = digitalRead(rightSensorPin);
+ leftsensorValue = digitalRead(leftsensorPin);
+ rightsensorValue = digitalRead(rightsensorPin);
 
-while(leftSensorPin  == 0 && rightSensorPin == 0 ){
- leftSensorPin  = digitalRead(leftSensorPin);
-rightSensorPin  = digitalRead(rightSensorPin);
+while(leftsensorValue == 0 && rightsensorValue == 0 ){
+ leftsensorValue = digitalRead(leftsensorPin);
+rightsensorValue = digitalRead(rightsensorPin);
 }
  stop();
  delay(2000);
  forwardU();
  delay(100);
- rightSensorPin  = digitalRead(rightSensorPin);
+ rightsensorValue = digitalRead(rightsensorPin);
  turn();
- while(rightSensorPin  == 0){
- rightSensorPin  = digitalRead(rightSensorPin);
+ while(rightsensorValue == 0){
+ rightsensorValue = digitalRead(rightsensorPin);
 }
 }
 }
