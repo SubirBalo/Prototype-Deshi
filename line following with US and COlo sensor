@@ -79,7 +79,22 @@ void GetColors()
   Green = pulseIn(out, digitalRead(out) == HIGH ? LOW : HIGH);
   delay(20);  
 }
+int ColorSensor(){
+   if (Red <= 15 && Green <= 15 && Blue <= 15) {  // If the values are low, it's likely the white color (all the colors are present)
+    Serial.println("White"); 
+                       
+  } else if (Red < Blue && Red <= Green && Red < 23) {  // If Red value is the lowest one and smaller than 23, it's likely Red
+    Serial.println("Red");
+    return 0;
+  } else if (Blue < Green && Blue < Red && Blue < 20) {  // Same thing for Blue
+    Serial.println("Blue");
+    return 1;
+  } else {
+    Serial.println("Unknown");  // If the color is not recognized, you can add more conditions as needed
+  }
 
+  delay(1000);  // 2s delay, you can modify if you want
+}
 void setup() {
   Serial.begin(9600);
  // Initialize motor driver pins
@@ -141,12 +156,10 @@ analogWrite(enA, motorSpeed);
  }
 
 
- if(distance < 20 )
+ if(distance < 20 && ColorSensor == 0 )
  {
       Serial.println(distance);
 
-  if (Red < Blue && Red <= Green && Red < 23) {  // If Red value is the lowest one and smaller than 23, it's likely Red
-    Serial.println("Red");
  left();
  delay(900);
  forward();
@@ -170,13 +183,8 @@ rightsensorValue = digitalRead(rightsensorPin);
  while(rightsensorValue == 1){
  rightsensorValue = digitalRead(rightsensorPin);
 }
-break;
-}
-else if (Blue < Green && Blue < Red && Blue < 20){
-  stop();
-      Serial.println("Blue");
 
 }
-  } 
+
 delay(500);
 }
