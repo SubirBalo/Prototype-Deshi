@@ -14,7 +14,7 @@ const int rightsensorPin = 7;
 // Define variables for ultrasonic sensor
 long duration;
 int distance;
-int motorSpeed =100;
+int motorSpeed =120;
 
 void forward() {
  digitalWrite(in1Pin, LOW);
@@ -30,7 +30,7 @@ void forwardU() {
  digitalWrite(in3Pin, LOW);
  digitalWrite(in4Pin, HIGH);
 }
-void right() {
+void left() {
  analogWrite(enA, motorSpeed);
  analogWrite(enB,motorSpeed );
  digitalWrite(in1Pin, LOW);
@@ -44,7 +44,7 @@ void stop() {
  digitalWrite(in3Pin, LOW);
  digitalWrite(in4Pin, LOW);
 }
-void left() {
+void right() {
  analogWrite(enA, motorSpeed);
  analogWrite(enB,motorSpeed );
  digitalWrite(in1Pin, HIGH);
@@ -54,7 +54,7 @@ void left() {
 }
 void turn() {
  analogWrite(enA, 0);
- analogWrite(enB,motorSpeed );
+ analogWrite(enB,100 );
  digitalWrite(in1Pin, LOW);
  digitalWrite(in2Pin, LOW);
  digitalWrite(in3Pin, LOW);
@@ -87,9 +87,9 @@ analogWrite(enA, motorSpeed);
  if (leftsensorValue == 0 && rightsensorValue == 0) {
  forward();
  } else if (leftsensorValue == 1 && rightsensorValue == 0) {
- left();
- } else if (leftsensorValue == 0 && rightsensorValue == 1) {
  right();
+ } else if (leftsensorValue == 0 && rightsensorValue == 1) {
+ left();
 
  }
  // Ultrasonic sensor code
@@ -106,9 +106,9 @@ analogWrite(enA, motorSpeed);
  if(distance<20)
  {
  left();
- delay(1000);
+ delay(900);
  forward();
- delay(1700);
+ delay(1400);
  right();
  delay(1200);
  forwardU();
