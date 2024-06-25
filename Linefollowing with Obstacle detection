@@ -14,7 +14,7 @@ const int rightsensorPin = 7;
 // Define variables for ultrasonic sensor
 long duration;
 int distance;
-int motorSpeed =120;
+int motorSpeed =200;
 
 void forward() {
  digitalWrite(in1Pin, LOW);
@@ -56,9 +56,9 @@ void turn() {
  analogWrite(enA, 0);
  analogWrite(enB,100 );
  digitalWrite(in1Pin, LOW);
- digitalWrite(in2Pin, LOW);
- digitalWrite(in3Pin, LOW);
- digitalWrite(in4Pin, HIGH);
+ digitalWrite(in2Pin, HIGH);
+ digitalWrite(in3Pin, HIGH);
+ digitalWrite(in4Pin, LOW);
 }
 void setup() {
  // Initialize motor driver pins
@@ -82,15 +82,12 @@ void loop() {
  // Read IR sensor input
  int leftsensorValue = digitalRead(leftsensorPin);
  int rightsensorValue = digitalRead(rightsensorPin);
-analogWrite(enA, motorSpeed);
- analogWrite(enB,motorSpeed );
- if (leftsensorValue == 0 && rightsensorValue == 0) {
+ if (leftsensorValue == 1 && rightsensorValue == 1) {
  forward();
- } else if (leftsensorValue == 1 && rightsensorValue == 0) {
- right();
  } else if (leftsensorValue == 0 && rightsensorValue == 1) {
+ right();
+ } else if (leftsensorValue == 1 && rightsensorValue == 0) {
  left();
-
  }
  // Ultrasonic sensor code
  digitalWrite(trigPin, LOW);
@@ -103,19 +100,19 @@ analogWrite(enA, motorSpeed);
  if(distance==0){
  distance=100;
  }
- if(distance<20)
+ if(distance<25)
  {
  left();
- delay(900);
+ delay(400);
  forward();
- delay(1400);
+ delay(2000);
  right();
- delay(1200);
+ delay(750);
  forwardU();
  leftsensorValue = digitalRead(leftsensorPin);
  rightsensorValue = digitalRead(rightsensorPin);
 
-while(leftsensorValue == 0 && rightsensorValue == 0 ){
+while(leftsensorValue == 1 && rightsensorValue == 1 ){
  leftsensorValue = digitalRead(leftsensorPin);
 rightsensorValue = digitalRead(rightsensorPin);
 }
@@ -125,7 +122,7 @@ rightsensorValue = digitalRead(rightsensorPin);
  delay(100);
  rightsensorValue = digitalRead(rightsensorPin);
  turn();
- while(rightsensorValue == 0){
+ while(rightsensorValue == 1){
  rightsensorValue = digitalRead(rightsensorPin);
 }
 }
