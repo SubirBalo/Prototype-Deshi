@@ -180,6 +180,7 @@ void turn() {
  digitalWrite(in4Pin, HIGH);
 }
 
+
 void check_wifi_status() {
     if (status != WiFi.status()) {
         status = WiFi.status();
@@ -303,7 +304,7 @@ void ws_send() {
     wsclient.write(G);
     wsclient.write(B);
     wsclient.write(LED_value);
-    wsclient.write(RGBSENSOR);
+    wsclient.write(distance);
 }
 
 void check_ws_request() {
@@ -362,7 +363,16 @@ void check_ws_request() {
         handshake();
     }
 }
+void sendUltrasonicDataToWebSocket(int distance) {
+    char data[5]; // Prepare a buffer to hold the data to send
+    data[0] = WS_FIN | WS_FR_OP_BIN; // WebSocket frame header for binary data
+    data[1] = 1; // Length of the data to send (in this case, 1 byte)
+    data[2] = distance; // Actual data to send (ultrasonic distance)
+    wsclient.write(data, 3); // Send the WebSocket frame
 
+    Serial.print("Sent ultrasonic distance: ");
+    Serial.println(distance);
+}
 void loop() {
     if (!wsclient.connected()) {
         check_wifi_status();
@@ -370,7 +380,7 @@ void loop() {
     }
     check_ws_request();
                                                    //Depending  of the RGB values given by the sensor we can define the color and displays it on  the monitor
-
+/*
   if (Red <=15 && Green <=15 && Blue <=15)  {
 
         //If the values  are low it's likely the white color (all the colors are present)
@@ -391,7 +401,7 @@ void loop() {
 
 
   delay(500);                                   //2s delay you can modify if you  want
-  
+  */
   // Read IR sensor input
  int leftsensorValue = digitalRead(leftsensorPin);
  int rightsensorValue = digitalRead(rightsensorPin);
@@ -417,6 +427,16 @@ analogWrite(enA, motorSpeed);
  digitalWrite(trigPin, LOW);
  duration = pulseIn(echoPin, HIGH);
  distance = duration/34.2;
+  // Send ultrasonic data to web page
+      // Send sensor data over WebSocket
+    // Print ultrasonic distance to Serial Monitor for debugging
+    Serial.print("Ultrasonic Distance: ");
+    Serial.println(distance);
+
+    // Send ultrasonic data over WebSocket
+    if (wsclient.connected()) {
+        sendUltrasonicDataToWebSocket(distance);
+    }
  if(distance==0){
  distance=100;
  }
@@ -424,7 +444,6 @@ analogWrite(enA, motorSpeed);
 
  if(distance < 20 )
  {
-      Serial.println(distance);
 
  left();
  delay(900);
@@ -452,7 +471,6 @@ rightsensorValue = digitalRead(rightsensorPin);
 
 }
 
-delay(500);
   
 }
 
